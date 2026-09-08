@@ -1,0 +1,100 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageShell from '../components/PageShell.astro';
+import PageHeader from '../components/PageHeader.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { credentials, site } from '../data/site';
+import { galleryItems } from '../data/gallery';
+
+const aboutPhotos = [
+  galleryItems.find((g) => g.src.endsWith('/new-builds/09.jpg')),
+  galleryItems.find((g) => g.src.endsWith('/house-refurbishments/07.jpg')),
+  galleryItems.find((g) => g.src.endsWith('/kitchens-bathrooms/04.jpg')),
+].filter((item): item is NonNullable<typeof item> => Boolean(item));
+---
+
+<Layout
+  title="About | JBK Estates Ltd"
+  description="JBK Estates Ltd is a local property development and building company covering extensions, conversions, refurbishments and new builds."
+>
+  <PageShell>
+    <PageHeader
+      eyebrow="About"
+      title="About JBK Estates"
+      lede="A local property development and building company. The work is domestic building and small residential development, run by tradesmen from drawings through to handover."
+      constrain
+    />
+
+    <section class="section-padding">
+      <div class="container-narrow grid gap-12 lg:grid-cols-2">
+        <div data-reveal>
+          <h2 class="mb-4 font-display text-2xl font-bold">The company</h2>
+          <div class="space-y-4 leading-relaxed text-muted">
+            <p>
+              {site.legalName} takes on extensions, conversions, house refurbishments, kitchens and bathrooms, general
+              building works and new builds. Company number {site.companyNumber}.
+            </p>
+            <p>
+              We also look at plots and small developments, either as a contracted build or as a joint venture.
+              Registered office: {site.address}.
+            </p>
+          </div>
+        </div>
+        <div class="border border-hairline bg-mist p-6 md:p-8" data-reveal>
+          <h2 class="mb-4 font-display text-2xl font-bold">How we operate</h2>
+          <p class="mb-6 text-sm leading-relaxed text-muted">
+            Quotes are priced against the drawings and the condition of the building. One point of contact runs the
+            site. Trades are coordinated from there, and the site is left tidy at the end of each day.
+          </p>
+          <ul class="space-y-3">
+            {
+              credentials.map((c) => (
+                <li class="flex gap-3 text-sm leading-relaxed">
+                  <span class="mt-2 h-1.5 w-1.5 shrink-0 bg-brick"></span>
+                  {c}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-padding pt-0">
+      <div class="container-narrow grid grid-cols-3 gap-3" data-reveal>
+        {
+          aboutPhotos.map((p) => (
+            <div class="aspect-[4/3] overflow-hidden bg-mist">
+              <img src={p.src} alt={p.alt} loading="lazy" class="h-full w-full object-cover" />
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="section-padding bg-mist">
+      <div class="container-narrow" data-reveal>
+        <p class="eyebrow mb-3">Accreditations</p>
+        <h2 class="mb-4 font-display text-2xl font-bold">Memberships and warranties</h2>
+        <p class="mb-8 max-w-2xl text-sm leading-relaxed text-muted">
+          Accreditation logos and scheme numbers will sit here once they are confirmed. Typical items for a domestic
+          builder include public liability insurance, a new-home warranty provider on new builds, and any trade body
+          memberships.
+        </p>
+        <ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {
+            ['Public liability insurance', 'New-home warranty (TBC)', 'Trade body (TBC)', 'Scheme membership (TBC)'].map(
+              (label) => (
+                <li class="flex min-h-24 items-center justify-center border border-dashed border-hairline bg-paper px-4 py-6 text-center text-xs font-semibold uppercase tracking-widest text-muted">
+                  {label}
+                </li>
+              ),
+            )
+          }
+        </ul>
+      </div>
+    </section>
+
+    <CtaBand />
+  </PageShell>
+</Layout>

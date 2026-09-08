@@ -1,0 +1,114 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageShell from '../components/PageShell.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { contacts, coverageLine, site } from '../data/site';
+---
+
+<Layout
+  title="Contact | JBK Estates Ltd"
+  description={`Contact JBK Estates Ltd. Call ${site.phone} or email ${site.email}.`}
+>
+  <PageShell>
+    <PageHeader
+      eyebrow="Contact"
+      title="Get a quote"
+      lede="Send the drawings, a brief, or a short description of the work. We will come back with a quote, or call the office."
+    />
+
+    <section class="section-padding">
+      <div class="container-narrow grid gap-10 lg:grid-cols-2">
+        <form id="contact-form" class="border border-hairline bg-mist p-6 md:p-8" data-reveal>
+          <div id="form-status" class="mb-4 hidden p-4 text-sm" role="status"></div>
+          <div class="mb-5">
+            <label for="name" class="mb-2 block text-sm font-semibold">Name</label>
+            <input type="text" id="name" name="name" required autocomplete="name" class="w-full border border-hairline bg-paper px-4 py-3 text-ink focus:border-brick" />
+          </div>
+          <div class="mb-5">
+            <label for="email" class="mb-2 block text-sm font-semibold">Email</label>
+            <input type="email" id="email" name="email" required autocomplete="email" class="w-full border border-hairline bg-paper px-4 py-3 text-ink focus:border-brick" />
+          </div>
+          <div class="mb-5">
+            <label for="phone" class="mb-2 block text-sm font-semibold">Phone</label>
+            <input type="tel" id="phone" name="phone" required autocomplete="tel" class="w-full border border-hairline bg-paper px-4 py-3 text-ink focus:border-brick" />
+          </div>
+          <div class="mb-5">
+            <label for="message" class="mb-2 block text-sm font-semibold">Message</label>
+            <textarea id="message" name="message" rows="5" required class="w-full resize-y border border-hairline bg-paper px-4 py-3 text-ink focus:border-brick"></textarea>
+          </div>
+          <input type="checkbox" name="botcheck" class="hidden" tabindex="-1" autocomplete="off" />
+          <button type="submit" class="btn-primary">Send enquiry</button>
+        </form>
+
+        <div class="space-y-6" data-reveal>
+          <div class="border border-hairline bg-ink p-8 text-white">
+            <h2 class="mb-6 font-display text-lg font-bold text-brick">Contacts</h2>
+            <dl class="space-y-6">
+              {
+                contacts.map((c) => (
+                  <div>
+                    <dt class="text-[0.65rem] uppercase tracking-widest text-white/50">{c.name}</dt>
+                    <dd>
+                      <a href={c.phoneHref} class="block text-xl font-semibold hover:text-brick">{c.phone}</a>
+                      <a href={c.emailHref} class="mt-1 block break-all text-sm text-white/80 hover:text-brick">{c.email}</a>
+                    </dd>
+                  </div>
+                ))
+              }
+            </dl>
+            <div class="mt-6 border-t border-white/10 pt-6">
+              <p class="text-[0.65rem] uppercase tracking-widest text-white/50">Registered office</p>
+              <address class="mt-2 text-sm not-italic leading-relaxed text-white/85">
+                {site.addressLines.map((line) => (
+                  <span class="block">{line}</span>
+                ))}
+              </address>
+            </div>
+          </div>
+          <div class="border border-hairline bg-mist p-6">
+            <h2 class="mb-3 font-display text-sm tracking-wide text-brick-dark">Where we work</h2>
+            <p class="text-sm leading-relaxed text-muted">{coverageLine}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </PageShell>
+</Layout>
+
+<script>
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
+  const status = document.getElementById('form-status');
+  const accessKey = import.meta.env.PUBLIC_WEB3FORMS_KEY;
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!status) return;
+
+    if (!accessKey) {
+      status.className = 'mb-4 border border-hairline bg-paper p-4 text-sm text-muted';
+      status.textContent =
+        'Contact form not configured yet. Call 07734 489559 or email tony@tonyberk.com.';
+      status.classList.remove('hidden');
+      return;
+    }
+
+    const formData = new FormData(form);
+    formData.append('access_key', accessKey);
+    formData.append('subject', 'New enquiry — JBK Estates Ltd');
+
+    status.className = 'mb-4 bg-paper p-4 text-sm text-ink';
+    status.textContent = 'Sending…';
+    status.classList.remove('hidden');
+
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', { method: 'POST', body: formData });
+      const data = (await res.json()) as { success?: boolean };
+      if (data.success) {
+        status.textContent = 'Thank you — your message has been sent.';
+        form.reset();
+      } else throw new Error('Failed');
+    } catch {
+      status.textContent = 'Something went wrong. Please call 07734 489559.';
+    }
+  });
+</script>

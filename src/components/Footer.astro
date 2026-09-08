@@ -1,0 +1,53 @@
+---
+import Logo from './Logo.astro';
+import { coverage, navLinks, site } from '../data/site';
+---
+
+<footer class="border-t border-white/10 bg-ink text-white">
+  <div class="section-padding container-narrow">
+    <div class="mb-12 grid gap-10 md:grid-cols-2 lg:grid-cols-4">
+      <div>
+        <Logo inverted compact />
+        <p class="mt-4 max-w-xs text-sm leading-relaxed text-white/70">{site.description}</p>
+        <p class="mt-4 text-[0.65rem] uppercase tracking-[0.18em] text-white/40">
+          Company no. {site.companyNumber}
+        </p>
+      </div>
+      <div>
+        <h2 class="mb-3 font-display text-sm tracking-wide text-brick">Site</h2>
+        <ul class="space-y-2 text-sm text-white/70">
+          {navLinks.map((l) => (
+            <li><a href={l.href} class="hover:text-brick">{l.label}</a></li>
+          ))}
+          <li><a href="/privacy-policy" class="hover:text-brick">Privacy Policy</a></li>
+          <li><a href="/legal-notice" class="hover:text-brick">Legal Notice</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="mb-3 font-display text-sm tracking-wide text-brick">Contact</h2>
+        <ul class="space-y-2 text-sm">
+          <li>
+            <a href={site.phoneHref} class="text-white hover:text-brick">{site.phone}</a>
+          </li>
+          <li>
+            <a href={site.emailHref} class="break-all text-white/80 hover:text-brick">{site.email}</a>
+          </li>
+        </ul>
+        <h2 class="mb-3 mt-6 font-display text-sm tracking-wide text-brick">Registered office</h2>
+        <address class="text-sm not-italic leading-relaxed text-white/70">
+          {site.addressLines.map((line) => (
+            <span class="block">{line}</span>
+          ))}
+        </address>
+      </div>
+      <div>
+        <h2 class="mb-3 font-display text-sm tracking-wide text-brick">Coverage</h2>
+        <p class="text-sm leading-relaxed text-white/70">{coverage.join(' · ')}</p>
+      </div>
+    </div>
+    <div class="flex flex-col items-start justify-between gap-3 border-t border-white/10 pt-8 text-[0.7rem] uppercase tracking-widest text-white/40 md:flex-row md:items-center">
+      <p>&copy; {new Date().getFullYear()} {site.legalName}</p>
+      <p>Registered in England · {site.companyNumber}</p>
+    </div>
+  </div>
+</footer>

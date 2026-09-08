@@ -1,0 +1,138 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageShell from '../components/PageShell.astro';
+import Hero from '../components/Hero.astro';
+import CtaBand from '../components/CtaBand.astro';
+import ServiceIcon from '../components/ServiceIcon.astro';
+import { homeGalleryPreview } from '../data/gallery';
+import { services } from '../data/services';
+import { credentials, site } from '../data/site';
+---
+
+<Layout>
+  <PageShell>
+    <Hero />
+
+    <section class="section-padding">
+      <div class="container-narrow grid gap-10 lg:grid-cols-[minmax(0,1fr)_16rem] lg:items-start">
+        <div data-reveal>
+          <p class="eyebrow mb-3">The company</p>
+          <h2 class="mb-6 max-w-2xl font-display text-3xl font-bold leading-tight md:text-4xl">
+            A local building and development company
+          </h2>
+          <div class="max-w-2xl space-y-4 text-base leading-relaxed text-ink/80">
+            <p>
+              {site.legalName} carries out building and development work on domestic properties. The book covers
+              extensions, conversions, house refurbishments, kitchens and bathrooms, general building works and new
+              builds.
+            </p>
+            <p>
+              Jobs are priced against the drawings and the condition of the building. We work with the client’s
+              architect, or ours, and run the site through to handover.
+            </p>
+          </div>
+        </div>
+        <div class="hidden border border-hairline bg-mist p-6 lg:block" data-reveal>
+          <p class="eyebrow mb-3">Coverage</p>
+          <p class="text-sm leading-relaxed text-muted">Hertfordshire, Essex, London and the East of England.</p>
+          <a href="/about" class="mt-4 inline-block text-sm font-semibold text-brick hover:underline">About the company</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-padding bg-mist">
+      <div class="container-narrow">
+        <div class="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
+          <div>
+            <p class="eyebrow mb-3" data-reveal>What we take on</p>
+            <h2 class="font-display text-3xl font-bold md:text-4xl" data-reveal>Services</h2>
+          </div>
+          <a href="/services" class="text-sm font-semibold text-brick hover:underline" data-reveal>All services</a>
+        </div>
+        <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {
+            services.map((s) => (
+              <a
+                href={`/services#${s.slug}`}
+                class="card-lift group flex flex-col gap-4 border-l-4 border-brick bg-paper p-6 shadow-[0_2px_10px_-4px_rgba(28,28,28,0.15)]"
+                data-reveal
+              >
+                <span class="icon-badge">
+                  <ServiceIcon slug={s.slug} class="h-5 w-5" />
+                </span>
+                <div>
+                  <h3 class="mb-2 font-display text-base font-bold">{s.title}</h3>
+                  <p class="text-sm leading-relaxed text-muted">{s.summary}</p>
+                </div>
+                <span class="mt-auto text-xs font-semibold uppercase tracking-wider text-brick opacity-0 transition-opacity group-hover:opacity-100">
+                  Learn more →
+                </span>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="section-padding">
+      <div class="container-narrow">
+        <div class="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
+          <div>
+            <p class="eyebrow mb-3" data-reveal>Recent work</p>
+            <h2 class="font-display text-3xl font-bold md:text-4xl" data-reveal>Project gallery</h2>
+          </div>
+          <a href="/gallery" class="text-sm font-semibold text-brick hover:underline" data-reveal>Full gallery</a>
+        </div>
+        <div class="grid grid-cols-2 gap-3 md:grid-cols-3">
+          {
+            homeGalleryPreview.map((item) => (
+              <a href="/gallery" class="group relative block aspect-[4/3] overflow-hidden bg-mist" data-reveal>
+                <img
+                  src={item.src}
+                  alt={item.alt}
+                  width={item.width}
+                  height={item.height}
+                  class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                  loading="lazy"
+                />
+                <span class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/80 to-transparent p-3 text-xs font-medium uppercase tracking-wider text-white">
+                  {item.title}
+                </span>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="section-padding bg-mist">
+      <div class="container-narrow">
+        <p class="eyebrow mb-3" data-reveal>How we work</p>
+        <h2 class="mb-6 font-display text-3xl font-bold md:text-4xl" data-reveal>Why work with us</h2>
+        <div class="grid gap-5 sm:grid-cols-2">
+          {
+            credentials.map((c) => (
+              <div class="card-lift flex gap-4 bg-paper p-6 shadow-[0_2px_10px_-4px_rgba(28,28,28,0.12)]" data-reveal>
+                <svg
+                  class="mt-0.5 h-6 w-6 shrink-0 text-brick"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p class="text-sm leading-relaxed text-ink/80">{c}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <CtaBand />
+  </PageShell>
+</Layout>

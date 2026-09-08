@@ -1,0 +1,220 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageShell from '../components/PageShell.astro';
+import PageHeader from '../components/PageHeader.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { galleryItems } from '../data/gallery';
+
+const categories = [...new Map(galleryItems.map((g) => [g.category, g.title])).entries()];
+---
+
+<Layout
+  title="Gallery | JBK Estates Ltd"
+  description="Photographs of completed extensions, conversions, refurbishments, kitchens, bathrooms and new builds by JBK Estates Ltd."
+>
+  <PageShell>
+    <PageHeader
+      eyebrow="Gallery"
+      title="Recent work"
+      lede="A selection of completed jobs — extensions, refurbishments, kitchens, bathrooms and new builds."
+    />
+
+    <section class="section-padding">
+      <div class="container-narrow">
+        <div class="mb-8 flex flex-wrap gap-2" data-reveal role="tablist" aria-label="Filter gallery">
+          <button type="button" class="filter-btn is-active" data-filter="all">All work</button>
+          {
+            categories.map(([slug, title]) => (
+              <button type="button" class="filter-btn" data-filter={slug}>
+                {title}
+              </button>
+            ))
+          }
+        </div>
+
+        <ul class="gallery-masonry" id="gallery-grid">
+          {
+            galleryItems.map((item, i) => (
+              <li data-category={item.category}>
+                <button
+                  type="button"
+                  class="gallery-item group relative mb-3 block w-full overflow-hidden bg-mist text-left"
+                  data-index={i}
+                  aria-label={`Open ${item.title}`}
+                >
+                  <img
+                    src={item.src}
+                    alt={item.alt}
+                    width={item.width}
+                    height={item.height}
+                    class="block h-auto w-full transition-transform duration-500 group-hover:scale-[1.04]"
+                    loading={i < 6 ? 'eager' : 'lazy'}
+                  />
+                  <span class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/80 to-transparent p-3 text-xs font-medium uppercase tracking-wider text-white">
+                    {item.title}
+                  </span>
+                </button>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    <CtaBand />
+  </PageShell>
+</Layout>
+
+<dialog id="lightbox" class="max-h-[100dvh] max-w-[100vw] border-0 bg-ink/95 p-0 text-white backdrop:bg-ink/80">
+  <div class="relative flex min-h-[100dvh] min-w-[100vw] flex-col items-center justify-center px-4 py-16">
+    <button
+      type="button"
+      id="lightbox-close"
+      class="absolute right-4 top-4 z-10 min-h-11 min-w-11 border border-white/30 text-xs uppercase tracking-widest hover:border-brick"
+      aria-label="Close"
+    >
+      Close
+    </button>
+    <button
+      type="button"
+      id="lightbox-prev"
+      class="absolute left-4 top-1/2 z-10 min-h-11 min-w-11 -translate-y-1/2 border border-white/30 text-xs uppercase tracking-widest hover:border-brick"
+      aria-label="Previous photo"
+    >
+      Prev
+    </button>
+    <button
+      type="button"
+      id="lightbox-next"
+      class="absolute right-4 top-1/2 z-10 min-h-11 min-w-11 -translate-y-1/2 border border-white/30 text-xs uppercase tracking-widest hover:border-brick"
+      aria-label="Next photo"
+    >
+      Next
+    </button>
+    <img id="lightbox-image" src="" alt="" class="max-h-[78dvh] w-auto max-w-[90vw] object-contain" />
+    <p id="lightbox-caption" class="mt-4 max-w-2xl text-center text-xs uppercase tracking-widest text-white/70"></p>
+    <p id="lightbox-counter" class="mt-2 text-xs tabular-nums text-white/50"></p>
+  </div>
+</dialog>
+
+<style>
+  .filter-btn {
+    border: 1px solid var(--color-hairline);
+    background: transparent;
+    color: var(--color-muted);
+    padding: 0.55rem 1.1rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 600;
+    transition: color 0.2s, background-color 0.2s, border-color 0.2s;
+  }
+  .filter-btn:hover {
+    color: var(--color-ink);
+    border-color: var(--color-brick);
+  }
+  .filter-btn.is-active {
+    background: var(--color-ink);
+    border-color: var(--color-ink);
+    color: white;
+  }
+
+  .gallery-masonry {
+    columns: 1;
+    column-gap: 0.75rem;
+  }
+
+  .gallery-masonry li {
+    break-inside: avoid;
+  }
+
+  @media (min-width: 640px) {
+    .gallery-masonry {
+      columns: 2;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .gallery-masonry {
+      columns: 3;
+    }
+  }
+</style>
+
+<script>
+  import { galleryItems } from '../data/gallery';
+
+  const buttons = document.querySelectorAll<HTMLButtonElement>('.gallery-item');
+  const dialog = document.getElementById('lightbox') as HTMLDialogElement | null;
+  const img = document.getElementById('lightbox-image') as HTMLImageElement | null;
+  const caption = document.getElementById('lightbox-caption');
+  const counter = document.getElementById('lightbox-counter');
+  let current = 0;
+
+  const visibleIndexes = (): number[] => {
+    const items = document.querySelectorAll<HTMLLIElement>('#gallery-grid > li');
+    const indexes: number[] = [];
+    items.forEach((li) => {
+      if (li.style.display !== 'none') {
+        const btn = li.querySelector<HTMLButtonElement>('.gallery-item');
+        if (btn) indexes.push(Number(btn.dataset.index));
+      }
+    });
+    return indexes;
+  };
+
+  const openAt = (index: number): void => {
+    if (!dialog || !img || !caption || !counter) return;
+    current = index;
+    const item = galleryItems[index];
+    if (!item) return;
+    img.src = item.src;
+    img.alt = item.alt;
+    caption.textContent = item.title;
+    const visible = visibleIndexes();
+    const pos = visible.indexOf(index);
+    counter.textContent = pos >= 0 ? `${pos + 1} / ${visible.length}` : `${index + 1} / ${galleryItems.length}`;
+    if (!dialog.open) dialog.showModal();
+  };
+
+  const step = (dir: number): void => {
+    const visible = visibleIndexes();
+    if (!visible.length) return;
+    const pos = visible.indexOf(current);
+    const nextPos = pos === -1 ? 0 : (pos + dir + visible.length) % visible.length;
+    openAt(visible[nextPos]);
+  };
+
+  buttons.forEach((btn) => {
+    btn.addEventListener('click', () => openAt(Number(btn.dataset.index)));
+  });
+
+  document.getElementById('lightbox-close')?.addEventListener('click', () => dialog?.close());
+  document.getElementById('lightbox-prev')?.addEventListener('click', () => step(-1));
+  document.getElementById('lightbox-next')?.addEventListener('click', () => step(1));
+  dialog?.addEventListener('click', (e) => {
+    if (e.target === dialog) dialog.close();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (!dialog?.open) return;
+    if (e.key === 'ArrowLeft') step(-1);
+    if (e.key === 'ArrowRight') step(1);
+  });
+
+  function initFilter(): void {
+    const filterButtons = document.querySelectorAll<HTMLButtonElement>('.filter-btn');
+    const items = document.querySelectorAll<HTMLLIElement>('#gallery-grid > li');
+    filterButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const filter = btn.dataset.filter;
+        filterButtons.forEach((b) => b.classList.toggle('is-active', b === btn));
+        items.forEach((li) => {
+          const match = filter === 'all' || li.dataset.category === filter;
+          li.style.display = match ? '' : 'none';
+        });
+      });
+    });
+  }
+
+  initFilter();
+</script>
