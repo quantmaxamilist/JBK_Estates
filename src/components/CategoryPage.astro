@@ -1,22 +1,26 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import PageShell from '../components/PageShell.astro';
-import TaglineBar from '../components/TaglineBar.astro';
-import CategoryNav from '../components/CategoryNav.astro';
-import ProjectRow from '../components/ProjectRow.astro';
-import { findProject } from '../data/projects';
+import PageShell from './PageShell.astro';
+import TaglineBar from './TaglineBar.astro';
+import CategoryNav from './CategoryNav.astro';
+import ProjectRow from './ProjectRow.astro';
+import { getCategory } from '../data/projects';
 
-const homeSlugs = ['optimising-living-space', 'extension-build-4', 'kitchen-refit-2', 'water-damage-refurbishment'];
-const homeProjects = homeSlugs.map((slug) => findProject(slug)!);
+interface Props {
+  slug: string;
+}
+
+const { slug } = Astro.props;
+const category = getCategory(slug);
 ---
 
-<Layout>
+<Layout title={`${category.pageTitle} | JBK Estates Ltd`} description={category.pageDescription}>
   <PageShell>
     <TaglineBar />
     <CategoryNav />
 
     {
-      homeProjects.map((project, i) => (
+      category.projects.map((project, i) => (
         <ProjectRow
           as={i === 0 ? 'h1' : 'h2'}
           title={project.heading}
@@ -61,7 +65,7 @@ const homeProjects = homeSlugs.map((slug) => findProject(slug)!);
   </div>
 </dialog>
 
-<script define:vars={{ groups: homeProjects.map((p) => p.photos) }}>
+<script define:vars={{ groups: category.projects.map((p) => p.photos) }}>
   const dialog = document.getElementById('lightbox');
   const img = document.getElementById('lightbox-image');
   const counter = document.getElementById('lightbox-counter');

@@ -1,0 +1,33 @@
+---
+import { categoryNav } from '../data/site';
+
+const currentPath = Astro.url.pathname;
+---
+
+<nav class="border-y border-hairline bg-paper" aria-label="Categories">
+  <div class="container-narrow overflow-x-auto">
+    <ul class="flex min-w-max justify-center px-5 md:px-8 lg:min-w-0 lg:justify-between lg:px-12">
+      {
+        categoryNav.map((item) => {
+          const active = currentPath === item.href;
+          const [line1, line2] = item.label.split('\n');
+          return (
+            <li>
+              <a
+                href={item.href}
+                class:list={[
+                  'flex h-full flex-col items-center justify-center px-5 py-3 text-center text-base font-semibold leading-tight whitespace-nowrap transition-colors',
+                  active ? 'bg-grey text-white' : 'text-grey hover:text-red',
+                ]}
+                aria-current={active ? 'page' : undefined}
+              >
+                <span>{line1}</span>
+                {line2 && <span>{line2}</span>}
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </div>
+</nav>

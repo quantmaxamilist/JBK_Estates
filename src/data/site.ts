@@ -2,7 +2,8 @@ export const site = {
   name: 'JBK Estates Ltd',
   legalName: 'JBK Estates Ltd',
   shortName: 'JBK Estates',
-  tagline: 'Property development and building works.',
+  tagline: 'JBK Estates Ltd – High Spec New Builds & Developments',
+  subTagline: 'We are always looking for new plots and developments.',
   description:
     'JBK Estates Ltd is a local property development and building company. Work covers extensions, conversions, house refurbishments, kitchens and bathrooms, general building works and new builds.',
   phone: '07734 489559',
@@ -18,8 +19,7 @@ export const site = {
   companyNumber: '11268352',
   url: 'https://www.jbkestates.co.uk',
   areaServed: ['Hertfordshire', 'Essex', 'London', 'East of England'],
-  ctaPrimary: 'Get a quote',
-  ctaSecondary: 'Call 07734 489559',
+  ctaPrimary: 'Contact Us',
 } as const;
 
 export const contacts = [
@@ -39,20 +39,11 @@ export const contacts = [
   },
 ] as const;
 
-export const coverage = ['Hertfordshire', 'Essex', 'London', 'East of England'] as const;
-
-export const coverageLine = coverage.join(' · ');
-
-export const navLinks = [
-  { label: 'Services', href: '/services' },
-  { label: 'Gallery', href: '/gallery' },
-  { label: 'About', href: '/about' },
-  { label: 'Contact', href: '/contact' },
-] as const;
-
-export const credentials = [
-  'Fully insured for domestic and commercial building works',
-  'Work from the client’s drawings, or with our architect',
-  'Site left tidy at the end of each day',
-  'Quotes priced against the job, not a standard package',
+export const categoryNav = [
+  { label: 'JBK\nEstates', href: '/' },
+  { label: 'Extensions\n& Conversions', href: '/extensions-conversions/' },
+  { label: 'House\nRefurbishments', href: '/house-refurbishments/' },
+  { label: 'Kitchens\n& Bathrooms', href: '/kitchens-bathrooms/' },
+  { label: 'General\nBuilding Works', href: '/general-building-works/' },
+  { label: 'New\nBuilds', href: '/new-builds/' },
 ] as const;

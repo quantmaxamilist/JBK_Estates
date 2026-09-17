@@ -2,31 +2,21 @@
 
 @theme {
   --color-ink: #1c1c1c;
-  --color-paper: #f4f1ec;
-  --color-mist: #eae6df;
-  --color-brick: #b33a2b;
-  --color-brick-dark: #8e2e22;
-  --color-muted: #6b6b6b;
-  --color-hairline: rgba(28, 28, 28, 0.12);
+  --color-grey: #58595b;
+  --color-red: #c0152f;
+  --color-red-dark: #9c1126;
+  --color-maroon: #7e383e;
+  --color-paper: #ffffff;
+  --color-hairline: rgba(88, 89, 91, 0.18);
   --color-white: #ffffff;
 
-  --font-display: 'Space Grotesk', system-ui, sans-serif;
-  --font-body: 'Inter', system-ui, sans-serif;
+  --font-display: 'Roboto', system-ui, sans-serif;
+  --font-body: 'Roboto', system-ui, sans-serif;
 }
 
 @layer base {
-  html {
-    scroll-behavior: smooth;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    html {
-      scroll-behavior: auto;
-    }
-  }
-
   body {
-    @apply bg-paper font-body text-ink antialiased;
+    @apply bg-paper font-body text-grey antialiased;
   }
 
   a:focus-visible,
@@ -35,7 +25,7 @@
   textarea:focus-visible,
   select:focus-visible,
   summary:focus-visible {
-    outline: 2px solid var(--color-brick);
+    outline: 2px solid var(--color-red);
     outline-offset: 2px;
   }
 
@@ -43,25 +33,21 @@
   h2,
   h3,
   h4 {
-    @apply font-display font-bold tracking-tight text-ink;
+    @apply font-display font-semibold tracking-tight text-grey;
   }
 }
 
 @layer components {
-  .eyebrow {
-    @apply text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-brick;
-  }
-
   .btn-primary {
-    @apply inline-flex items-center justify-center rounded-none bg-brick px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-brick-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brick;
+    @apply inline-flex items-center justify-center gap-2 rounded-[3px] bg-red px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-red-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red;
   }
 
   .btn-ghost {
-    @apply inline-flex items-center justify-center rounded-none border border-ink/20 bg-transparent px-6 py-3 text-sm font-semibold text-ink transition-colors hover:border-brick hover:text-brick focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brick;
+    @apply inline-flex items-center justify-center rounded-[3px] border border-grey/30 bg-transparent px-6 py-3 text-sm font-medium text-grey transition-colors hover:border-red hover:text-red focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red;
   }
 
-  .btn-ghost-light {
-    @apply inline-flex items-center justify-center rounded-none border border-white/35 bg-transparent px-6 py-3 text-sm font-semibold text-white transition-colors hover:border-brick hover:text-brick focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brick;
+  .btn-panel {
+    @apply inline-flex items-center justify-center rounded-[3px] border-2 border-red bg-grey px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-ink;
   }
 
   .section-padding {
@@ -69,27 +55,14 @@
   }
 
   .container-narrow {
-    @apply mx-auto max-w-6xl;
-  }
-
-  .icon-badge {
-    @apply flex h-11 w-11 shrink-0 items-center justify-center bg-brick text-white;
-  }
-
-  .card-lift {
-    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_36px_-18px_rgba(28,28,28,0.35)];
+    @apply mx-auto max-w-[1000px];
   }
 }
 
-.photo-frame {
-  position: relative;
-}
-
-.photo-frame__img-wrap {
-  position: relative;
-  overflow: hidden;
-  border: 1px solid var(--color-hairline);
-  box-shadow: 0 30px 60px -24px rgba(28, 28, 28, 0.3);
+.maroon-panel {
+  background-color: var(--color-maroon);
+  background-image: url('/images/brand/panel-texture.png');
+  background-repeat: repeat;
 }
 
 [data-reveal] {
@@ -120,6 +93,6 @@
 }
 
 ::selection {
-  background: #b33a2b;
-  color: #f4f1ec;
+  background: #c0152f;
+  color: #ffffff;
 }

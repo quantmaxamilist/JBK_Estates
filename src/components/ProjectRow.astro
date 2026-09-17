@@ -1,0 +1,41 @@
+---
+interface Props {
+  title: string;
+  text: string;
+  image: string;
+  imageAlt: string;
+  buttonLabel?: string;
+  lightboxGroup: number;
+  lightboxStart?: number;
+  as?: 'h1' | 'h2';
+}
+
+const {
+  title,
+  text,
+  image,
+  imageAlt,
+  buttonLabel = 'Click Here for More Pictures',
+  lightboxGroup,
+  lightboxStart = 0,
+  as: Heading = 'h2',
+} = Astro.props;
+---
+
+<div class="container-narrow grid border-b border-hairline md:grid-cols-[7fr_3fr] md:min-h-[423px]" data-reveal>
+  <div class="relative h-64 md:h-auto">
+    <img src={image} alt={imageAlt} class="absolute inset-0 h-full w-full object-cover" loading="lazy" />
+    <button
+      type="button"
+      class="btn-panel absolute left-4 top-4"
+      data-lightbox-group={lightboxGroup}
+      data-lightbox-start={lightboxStart}
+    >
+      {buttonLabel}
+    </button>
+  </div>
+  <div class="maroon-panel flex flex-col justify-center px-6 py-10 md:px-10 md:py-12">
+    <Heading class="mb-4 font-display text-2xl font-semibold text-white md:text-3xl">{title}</Heading>
+    <p class="max-w-lg text-base leading-relaxed text-white/90">{text}</p>
+  </div>
+</div>
