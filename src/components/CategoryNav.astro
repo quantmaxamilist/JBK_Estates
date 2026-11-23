@@ -2,11 +2,53 @@
 import { categoryNav } from '../data/site';
 
 const currentPath = Astro.url.pathname;
+const current = categoryNav.find((item) => item.href === currentPath);
+const currentLabel = current ? current.label.replace('\n', ' ') : 'Menu';
 ---
 
 <nav class="border-y border-hairline bg-paper" aria-label="Categories">
-  <div class="container-narrow overflow-x-auto">
-    <ul class="flex min-w-max justify-center px-5 md:px-8 lg:min-w-0 lg:justify-between lg:px-12">
+  <!-- Mobile / tablet: hamburger toggle -->
+  <div class="container-narrow lg:hidden">
+    <button
+      type="button"
+      class="flex w-full items-center justify-between px-5 py-4 text-left text-base font-semibold text-grey md:px-8"
+      aria-expanded="false"
+      aria-controls="category-menu"
+      data-nav-toggle
+    >
+      <span>{currentLabel}</span>
+      <span class="sr-only" data-nav-label>Open menu</span>
+      <svg class="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <path data-nav-icon-open d="M4 7h16M4 12h16M4 17h16" />
+        <path data-nav-icon-close class="hidden" d="M6 6l12 12M18 6L6 18" />
+      </svg>
+    </button>
+    <ul id="category-menu" class="hidden border-t border-hairline" data-nav-menu>
+      {
+        categoryNav.map((item) => {
+          const active = currentPath === item.href;
+          return (
+            <li class="border-b border-hairline last:border-b-0">
+              <a
+                href={item.href}
+                class:list={[
+                  'block px-5 py-3.5 text-base font-semibold transition-colors md:px-8',
+                  active ? 'bg-grey text-white' : 'text-grey hover:text-red',
+                ]}
+                aria-current={active ? 'page' : undefined}
+              >
+                {item.label.replace('\n', ' ')}
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </div>
+
+  <!-- Desktop: single row -->
+  <div class="container-narrow hidden lg:block">
+    <ul class="flex justify-between px-12">
       {
         categoryNav.map((item) => {
           const active = currentPath === item.href;
@@ -31,3 +73,21 @@ const currentPath = Astro.url.pathname;
     </ul>
   </div>
 </nav>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-nav-toggle]').forEach((btn) => {
+    const menu = btn.closest('nav')?.querySelector<HTMLElement>('[data-nav-menu]');
+    const openIcon = btn.querySelector('[data-nav-icon-open]');
+    const closeIcon = btn.querySelector('[data-nav-icon-close]');
+    const label = btn.querySelector('[data-nav-label]');
+    if (!menu) return;
+    btn.addEventListener('click', () => {
+      const open = btn.getAttribute('aria-expanded') !== 'true';
+      btn.setAttribute('aria-expanded', String(open));
+      menu.classList.toggle('hidden', !open);
+      openIcon?.classList.toggle('hidden', open);
+      closeIcon?.classList.toggle('hidden', !open);
+      if (label) label.textContent = open ? 'Close menu' : 'Open menu';
+    });
+  });
+</script>

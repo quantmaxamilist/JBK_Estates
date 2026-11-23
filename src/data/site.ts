@@ -41,9 +41,9 @@ export const contacts = [
 
 export const categoryNav = [
   { label: 'JBK\nEstates', href: '/' },
+  { label: 'New\nBuilds', href: '/new-builds/' },
   { label: 'Extensions\n& Conversions', href: '/extensions-conversions/' },
   { label: 'House\nRefurbishments', href: '/house-refurbishments/' },
   { label: 'Kitchens\n& Bathrooms', href: '/kitchens-bathrooms/' },
   { label: 'General\nBuilding Works', href: '/general-building-works/' },
-  { label: 'New\nBuilds', href: '/new-builds/' },
 ] as const;
